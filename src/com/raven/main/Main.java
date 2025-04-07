@@ -4,6 +4,7 @@ import com.raven.event.EventMenu;
 import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import view.HoaDon;
 import view.KhachHangView;
 import view.NhanVienView;
 import view.SanPhamView;
@@ -29,7 +30,7 @@ public class Main extends javax.swing.JFrame {
             } else if (index == 2) {
                     setForm(new NhanVienView());
             } else if (index == 3) {
-
+                    setForm(new HoaDon());
             } else if (index == 4) {
                 setForm(new KhachHangView());
             } else if (index == 5) {
