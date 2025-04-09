@@ -23,7 +23,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import model.HoaDonChiTietModel;
 import model.HoaDonModel;
-import model.SanPhamChiTiet;
 import model.SanPhamChiTiet1;
 import repository.BanHang;
 import repository.HoaDonChiTietRepo;
@@ -41,7 +40,7 @@ public class HoaDon extends javax.swing.JPanel {
     private BanHang qLy = new BanHang();
     DefaultTableModel defaultTableModel;
     BanHang repo = new BanHang();
-    private int idNhanVien = 1;
+    private int idNhanVien ;
     //hóa đơn
     private HoaDonRepo qlyhd = new HoaDonRepo();
     private HoaDonChiTietRepo qLyChiTiet = new HoaDonChiTietRepo();
@@ -49,13 +48,13 @@ public class HoaDon extends javax.swing.JPanel {
     /**
      * Creates new form HoaDon
      */
-    public HoaDon() {
+    public HoaDon(int idNhanVien) {
+        this.idNhanVien = idNhanVien;
         initComponents();
         fillTableHoaDonCho();
         fillTableSp();
         this.fillTableHoaDon();
         this.showPopup(tblHoaDon);
-        txtTienDu.setEditable(false);
     }
 
     /**
@@ -929,11 +928,11 @@ public class HoaDon extends javax.swing.JPanel {
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel20Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel20Layout.createSequentialGroup()
                         .addComponent(jLabel64)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblLoaiThanhToan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblLoaiThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel20Layout.createSequentialGroup()
                         .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel63, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1321,7 +1320,17 @@ public class HoaDon extends javax.swing.JPanel {
 
     private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
 
-        this.createHoaDon();
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Bạn có chắc chắn muốn tạo hóa đơn mới không?",
+                "Xác nhận tạo hóa đơn",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            this.createHoaDon();
+        }
+
     }//GEN-LAST:event_btnTaoHoaDonActionPerformed
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
@@ -1582,42 +1591,39 @@ public class HoaDon extends javax.swing.JPanel {
 
     public void inputThanhToan(JTextField txtTtLoai1, JTextField txtTtLoai2) {
 
-     try {
-            // Lấy giá trị và làm sạch chuỗi: loại bỏ dấu chấm và dấu phẩy
-            String thanhTien = txtThanhTien.getText().replace(".", "").replace(",", "");
-            String ttLoai1 = txtTtLoai1.getText().replace(".", "").replace(",", "");
-            String ttLoai2 = txtTtLoai2.getText().replace(".", "").replace(",", "");
+         try {
+        String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "");
+        long thanhTien = Long.parseLong(thanhTienStr);
 
-            long tienDu = 0;
-            DecimalFormat df = new DecimalFormat("#,###"); // Dấu phân cách hàng nghìn
+        long loai1 = txtTtLoai1.getText().isEmpty() ? 0 : Long.parseLong(txtTtLoai1.getText().replace(",", ""));
+        long loai2 = txtTtLoai2.getText().isEmpty() ? 0 : Long.parseLong(txtTtLoai2.getText().replace(",", ""));
 
-            // Kiểm tra độ dài của txtTtLoai2
-            if (ttLoai2.length() > 13) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập dưới 999 tỷ");
-                return;
-            }
-
-            if (ttLoai2.isEmpty()) {
-                // Nếu txtTtLoai2 rỗng, hiển thị 0 với định dạng
-                txtTienDu.setText(df.format(0));
-            } else if (ttLoai1.isEmpty()) {
-                // Nếu txtTtLoai1 rỗng, chỉ tính với txtTtLoai2
-                tienDu = Long.parseLong(ttLoai2) - Long.parseLong(thanhTien);
-                txtTienDu.setText(df.format(tienDu));
-            } else {
-                // Tính tổng cả hai loại thanh toán
-                tienDu = Long.parseLong(ttLoai1) + Long.parseLong(ttLoai2) - Long.parseLong(thanhTien);
-                txtTienDu.setText(df.format(tienDu));
-            }
-        } catch (NumberFormatException e) {
-            // Xử lý trường hợp chuỗi không thể chuyển thành số
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!");
-            DecimalFormat df = new DecimalFormat("#,###");
-            txtTienDu.setText(df.format(0));
+        if (txtTtLoai2.getText().length() > 13) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập dưới 999 tỷ");
+            return;
         }
+
+        long tienDu = loai1 + loai2 - thanhTien;
+
+        // Hiển thị tiền dư có định dạng
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        txtTienDu.setText(formatter.format(tienDu));
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số!");
+    }
     }
 
-
+//    public void modelComboBox() {
+//        DefaultComboBoxModel comboBox = (DefaultComboBoxModel) cbbLoaiSanPham.getModel();
+//        comboBox.removeAllElements();
+//
+//        comboBox.addElement("Tất Cả");
+//
+//        for (String x : qLy.modelComboBox()) {
+//            comboBox.addElement(x);
+//        }
+//    }
     public boolean checkTable() {
         if (tblHoaDon.getRowCount() == 0) {
 
@@ -1629,60 +1635,62 @@ public class HoaDon extends javax.swing.JPanel {
 
     public void thanhToan() {
 
-      if (jblMaHoaDon.getText().equals("#####")) {
-            JOptionPane.showMessageDialog(this, "Chọn hóa đơn cần thanh toán");
-        } else if (checkTable()) {
-            long tienDu;
-            long tienMat;
-            long tienCk;
+         if (jblMaHoaDon.getText().equals("#####")) {
+        JOptionPane.showMessageDialog(this, "Chọn hóa đơn cần thanh toán");
+        return;
+    }
 
-            try {
-                String tienMatText = txtTienMat.getText().replace(".", "").replace(",", "");
-                tienMat = tienMatText.isEmpty() ? 0 : Long.parseLong(tienMatText);
-            } catch (NumberFormatException e) {
-                tienMat = -1;
-            }
+    if (!checkTable()) return;
 
-            try {
-                String tienCkText = txtChuyenKhoan.getText().replace(".", "").replace(",", "");
-                tienCk = tienCkText.isEmpty() ? 0 : Long.parseLong(tienCkText);
-            } catch (NumberFormatException e) {
-                tienCk = -1;
-            }
+    long tienDu, tienMat, tienCk;
 
-            // Tính tiền dư dựa trên tổng tiền và số tiền thanh toán
-            String thanhTien = txtThanhTien.getText().replace(".", "").replace(",", "");
-            long tongTien = Long.parseLong(thanhTien);
-            tienDu = tienMat + tienCk - tongTien;
+    try {
+        tienDu = Long.parseLong(txtTienDu.getText().replace(",", ""));
+    } catch (NumberFormatException e) {
+        tienDu = -1;
+    }
 
-            // Định dạng tiền dư với dấu phân cách
-            DecimalFormat df = new DecimalFormat("#,###"); // Dấu phân cách hàng nghìn
-            txtTienDu.setText(df.format(tienDu));
+    try {
+        tienMat = Long.parseLong(txtTienMat.getText().replace(",", ""));
+    } catch (NumberFormatException e) {
+        tienMat = -1;
+    }
 
-            if (tienMat <= 0 && tienCk <= 0) {
-                JOptionPane.showMessageDialog(this, "Khách hàng chưa thanh toán hóa đơn");
-            } else if (tienDu < 0) {
-                JOptionPane.showMessageDialog(this, "Khách hàng thanh toán còn thiếu");
-            } else if (tienDu > 1_000_000) {
-                JOptionPane.showMessageDialog(this, "Trả lại tiền thừa cho khách hàng");
-            } else {
-                // Logic thanh toán
-                String loai = cbbThanhToan.getSelectedItem().toString();
+    try {
+        tienCk = Long.parseLong(txtChuyenKhoan.getText().replace(",", ""));
+    } catch (NumberFormatException e) {
+        tienCk = -1;
+    }
 
-                if (cbbThanhToan.getSelectedIndex() == 2) { // Kết hợp thanh toán
-                    if (tienMat <= 0 || txtTienMat.getText().trim().isEmpty()) {
-                        loai = "Chuyển Khoản";
-                    } else if (tienCk <= 0 || txtChuyenKhoan.getText().trim().isEmpty()) {
-                        loai = "Tiền Mặt";
-                    }
+    if (tienMat <= 0 && tienCk <= 0) {
+        JOptionPane.showMessageDialog(this, "Khách hàng chưa thanh toán hóa đơn");
+    } else if (tienDu < 0) {
+        JOptionPane.showMessageDialog(this, "Khách hàng thanh toán còn thiếu");
+    } else if (tienDu > 1_000_000) {
+        JOptionPane.showMessageDialog(this, "Trả lại tiền thừa cho khách hàng");
+    } else {
+        try {
+            String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "");
+            long tongTien = Long.parseLong(thanhTienStr);
+            String loai = cbbThanhToan.getSelectedItem().toString();
+
+            if (cbbThanhToan.getSelectedIndex() == 2) {
+                if (tienMat <= 0 || txtTienMat.getText().trim().isEmpty()) {
+                    loai = "Chuyển Khoản";
+                } else if (tienCk <= 0 || txtChuyenKhoan.getText().trim().isEmpty()) {
+                    loai = "Tiền Mặt";
                 }
-
-                this.qLy.updateThanhToanHoaDon(loai, tongTien,
-                        qLy.getHoaDon(tblHoaDonCho.getSelectedRow()).getId());
-                JOptionPane.showMessageDialog(this, "Thanh toán thành công");
-                this.loadForm();
             }
+
+            this.qLy.updateThanhToanHoaDon(loai, tongTien,
+                    qLy.getHoaDon(tblHoaDonCho.getSelectedRow()).getId());
+            JOptionPane.showMessageDialog(this, "Thanh toán thành công");
+            this.loadForm();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Lỗi dữ liệu: Không thể chuyển đổi thành số");
         }
+    }
     }
     
     public void loadForm () {
@@ -1693,6 +1701,9 @@ public class HoaDon extends javax.swing.JPanel {
         txtTienMat.setText(null);
         txtChuyenKhoan.setText(null);
         txtTienDu.setText(null);
+        jblMaHoaDon.setText("#####");
+        txtMaVoucher.setText(null);
+        txtGiamGia.setText(null);
         fillTableHoaDonCho();
         fillTableHoaDon();
         DefaultTableModel tblModel = (DefaultTableModel) tblHoaDon.getModel();
@@ -1851,15 +1862,14 @@ public class HoaDon extends javax.swing.JPanel {
     public void createHoaDon() {
         DefaultTableModel tblModel = (DefaultTableModel) tblHoaDonCho.getModel();
         tblModel.setRowCount(0);
-
-//        jTabbedPane1.setTitleAt(0, qLy.createMaHoaDon());
+        jTabbedPane5.setTitleAt(0, qLy.createMaHoaDon());
         jblMaHoaDon.setText(qLy.createMaHoaDon());
-        txtTenKhachHang.setText("Khách Vãng Lai");
         DefaultTableModel tblModelHoaDon = (DefaultTableModel) tblHoaDon.getModel();
         tblModelHoaDon.setRowCount(0);
         qLy.themHoaDonMoi(idNhanVien);
         fillTableHoaDonCho();
         cleanTextKhachHang();
+        txtTenKhachHang.setText("Khách Vãng Lai");
         cleanTextVoucher();
         tblHoaDonCho.setRowSelectionInterval(tblHoaDonCho.getRowCount() - 1, tblHoaDonCho.getRowCount() - 1);
 

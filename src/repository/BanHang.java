@@ -27,10 +27,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -38,6 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import model.HoaDonChiTietModel;
@@ -639,10 +643,14 @@ public class BanHang {
         return;
     }
 
-    List<String[]> products = new ArrayList<>();
-    for (HoaDonChiTietModel x : list) {
-        products.add(new String[]{x.getTen(), String.valueOf(x.getSoLuong()), String.valueOf(x.getGia())});
-    }
+       List<String[]> products = new ArrayList<>();
+       NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
+
+       for (HoaDonChiTietModel x : list) {
+           String giaFormatted = currencyFormat.format(x.getGia());
+           products.add(new String[]{x.getTen(), String.valueOf(x.getSoLuong()), giaFormatted});
+       }
+
     
     Document document = new Document();
     
@@ -748,9 +756,8 @@ public class BanHang {
             } else {
                 System.out.println("File not found.");
             }
-        }
-        
-    } catch (DocumentException | IOException e) {
+        }       
+    }catch (DocumentException | IOException e) {
         e.printStackTrace();
     }
 }
