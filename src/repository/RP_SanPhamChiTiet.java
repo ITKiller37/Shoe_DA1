@@ -215,4 +215,53 @@ public void update(SanPhamChiTiet spct) {
         throw new RuntimeException("Lỗi khi hiển thị lại sản phẩm chi tiết: " + e.getMessage());
     }
 }
+    
+    public ArrayList<SanPhamChiTiet> searchByKeyword(String keyword) {
+        ArrayList<SanPhamChiTiet> list = new ArrayList<>();
+        String sql = "SELECT * FROM SanPhamChiTiet WHERE TrangThai = 0 AND (ID = ? OR MaSanPhamChiTiet LIKE ? OR TenSanPhamChiTiet LIKE ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            int id;
+            try {
+                id = Integer.parseInt(keyword);
+            } catch (NumberFormatException e) {
+                id = -1; // Nếu không phải số, đặt ID là -1 để không tìm theo ID
+            }
+            ps.setInt(1, id);
+            ps.setString(2, "%" + keyword + "%"); // Tìm theo MaSanPhamChiTiet
+            ps.setString(3, "%" + keyword + "%"); // Tìm theo TenSanPhamChiTiet
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int idResult = rs.getInt("ID");
+                String maSanPhamChiTiet = rs.getString("MaSanPhamChiTiet");
+                String tenSanPhamChiTiet = rs.getString("TenSanPhamChiTiet");
+                BigDecimal giaSanPham = rs.getBigDecimal("GiaSanPham");
+                String anhSanPham = rs.getString("AnhSanPham");
+                int soLuong = rs.getInt("SoLuong");
+                String moTa = rs.getString("MoTa");
+                int idChatLieu = rs.getInt("IdChatLieu");
+                int idKichCo = rs.getInt("IdKichCo");
+                int idMauSac = rs.getInt("IdMauSac");
+                int idNSX = rs.getInt("IdNSX");
+                int idLoaiSanPham = rs.getInt("IdLoaiSanPham");
+                
+                Timestamp tsNgayTao = rs.getTimestamp("NgayTao");
+                Date ngayTao = (tsNgayTao != null) ? new Date(tsNgayTao.getTime()) : null;
+                
+                Timestamp tsNgaySua = rs.getTimestamp("NgaySua");
+                Date ngaySua = (tsNgaySua != null) ? new Date(tsNgaySua.getTime()) : null;
+                
+                int trangThai = rs.getInt("TrangThai");
+                if (rs.wasNull()) {
+                    trangThai = 0;
+                }
+                
+                SanPhamChiTiet spct = new SanPhamChiTiet(idResult, maSanPhamChiTiet, tenSanPhamChiTiet, giaSanPham, anhSanPham, soLuong, moTa, idChatLieu, idKichCo, idMauSac, idNSX, idLoaiSanPham, trangThai, ngayTao, ngaySua);
+                list.add(spct);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm kiếm sản phẩm chi tiết: " + e.getMessage(), e);
+        }
+        return list;
+    }
 }

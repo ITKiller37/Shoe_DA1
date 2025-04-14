@@ -222,4 +222,36 @@ public boolean show(int id) {
         throw new RuntimeException("Lỗi khi hiển thị lại loại sản phẩm: " + e.getMessage(), e);
     }
 }
+
+    public ArrayList<LoaiSanPham> searchByKeyword(String keyword) {
+    ArrayList<LoaiSanPham> list = new ArrayList<>();
+    String sql = "SELECT * FROM LoaiSanPham WHERE TrangThai = 0 AND (ID = ? OR MaLoaiSanPham LIKE ? OR TenLoaiSanPham LIKE ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        int id;
+        try {
+            id = Integer.parseInt(keyword);
+        } catch (NumberFormatException e) {
+            id = -1;
+        }
+        ps.setInt(1, id);
+        ps.setString(2, "%" + keyword + "%");
+        ps.setString(3, "%" + keyword + "%");
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            LoaiSanPham lsp = new LoaiSanPham(
+                rs.getInt("Id"),
+                rs.getString("MaLoaiSanPham"),
+                rs.getString("TenLoaiSanPham"),
+                rs.getDate("NgayTao"),
+                rs.getDate("NgaySua"),
+                rs.getInt("TrangThai")
+            );
+            list.add(lsp);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Lỗi khi tìm kiếm loại sản phẩm: " + e.getMessage(), e);
+    }
+    return list;
+}
 }

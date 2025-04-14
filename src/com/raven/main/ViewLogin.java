@@ -217,25 +217,30 @@ public class ViewLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_showMouseClicked
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-      String soDienThoai = txtTaiKhoan.getText();
-        String matKhau = new String(txtMatKhau.getPassword());
-        NhanVienLoginInfo loginInfo = rp.getLoginInfo(soDienThoai, matKhau);
-        
+     String soDienThoai = txtTaiKhoan.getText().trim();
+        String matKhau = new String(txtMatKhau.getPassword()).trim();
+
         if (checkNull()) {
+            NhanVienLoginInfo loginInfo = rp.getLoginInfo(soDienThoai, matKhau);
             if (loginInfo == null) {
-                JOptionPane.showMessageDialog(this, "Đăng nhập thất bại! Tài khoản hoặc mật khẩu không đúng");
+                // Kiểm tra xem nhân viên có nghỉ việc không
+                if (rp.isNhanVienNghiViec(soDienThoai)) {
+                    JOptionPane.showMessageDialog(this, "Nhân viên này đã nghỉ việc!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Đăng nhập thất bại! Số điện thoại hoặc mật khẩu không đúng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             } else if (loginInfo.getVaiTro().trim().equalsIgnoreCase("nhân viên")) {
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công với vai trò nhân viên");
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 Main trangChu = new Main(loginInfo.getVaiTro(), loginInfo.getId());
                 trangChu.setVisible(true);
                 this.dispose();
             } else if (loginInfo.getVaiTro().trim().equalsIgnoreCase("quản lý")) {
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công với vai trò quản lý"); 
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
                 Main trangChu = new Main(loginInfo.getVaiTro(), loginInfo.getId());
                 trangChu.setVisible(true);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Vai trò không hợp lệ");
+                JOptionPane.showMessageDialog(this, "Vai trò không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed

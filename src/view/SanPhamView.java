@@ -506,6 +506,7 @@ public class SanPhamView extends javax.swing.JPanel {
     }
     
     
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -552,8 +553,8 @@ public class SanPhamView extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblSanPham = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtSearchSanPham = new javax.swing.JTextField();
+        btnSearchSanPham = new javax.swing.JButton();
         btnThemSanPham = new javax.swing.JButton();
         btnSuaSanPham = new javax.swing.JButton();
         btnAnSanPham = new javax.swing.JButton();
@@ -576,6 +577,8 @@ public class SanPhamView extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblThuocTinh = new javax.swing.JTable();
+        btnSearchThuocTinh = new javax.swing.JButton();
+        txtSearchThuocTinh = new javax.swing.JTextField();
         btnHienThiThuocTinhAn = new javax.swing.JButton();
 
         SanPhamDialog.setMinimumSize(new java.awt.Dimension(1000, 400));
@@ -849,8 +852,15 @@ public class SanPhamView extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(tblSanPham);
 
-        jLabel1.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        jLabel1.setText("Tìm Kiếm Sản Phẩm:");
+        btnSearchSanPham.setBackground(new java.awt.Color(255, 204, 204));
+        btnSearchSanPham.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        btnSearchSanPham.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/icons8-search-20 (1).png"))); // NOI18N
+        btnSearchSanPham.setText("Tìm Kiếm");
+        btnSearchSanPham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchSanPhamActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -859,20 +869,20 @@ public class SanPhamView extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1043, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnSearchSanPham)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSearchSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSearchSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchSanPham))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1122,20 +1132,40 @@ public class SanPhamView extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(tblThuocTinh);
 
+        btnSearchThuocTinh.setBackground(new java.awt.Color(255, 204, 204));
+        btnSearchThuocTinh.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        btnSearchThuocTinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/icons8-search-20 (1).png"))); // NOI18N
+        btnSearchThuocTinh.setText("Tìm Kiếm");
+        btnSearchThuocTinh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchThuocTinhActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnSearchThuocTinh)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSearchThuocTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSearchThuocTinh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtSearchThuocTinh))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1173,7 +1203,7 @@ public class SanPhamView extends javax.swing.JPanel {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnHienThiThuocTinhAn)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Thuộc tính sản phẩm", jPanel2);
@@ -1776,6 +1806,106 @@ public class SanPhamView extends javax.swing.JPanel {
     
     }//GEN-LAST:event_btnHienThiLaiThuocTinhActionPerformed
 
+    private void btnSearchThuocTinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchThuocTinhActionPerformed
+        String keyword = txtSearchThuocTinh.getText().trim();
+    if (keyword.isEmpty()) {
+        // Nếu không nhập từ khóa, hiển thị toàn bộ danh sách
+        loadToTableThuocTinh();
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) tblThuocTinh.getModel();
+    model.setRowCount(0); // Xóa dữ liệu cũ trên bảng
+
+    if (rdoChatLieu.isSelected()) {
+        ArrayList<ChatLieu> result = CLRepo.searchByKeyword(keyword);
+        for (ChatLieu cl : result) {
+            model.addRow(new Object[]{
+                cl.getId(),
+                cl.getMaChatLieu(),
+                cl.getTenChatLieu()
+            });
+        }
+    } else if (rdoKichCo.isSelected()) {
+        ArrayList<KichCo> result = KCRepo.searchByKeyword(keyword);
+        for (KichCo kc : result) {
+            model.addRow(new Object[]{
+                kc.getId(),
+                kc.getMaKichCo(),
+                kc.getSize()
+            });
+        }
+    } else if (rdoLoaiSanPham.isSelected()) {
+        ArrayList<LoaiSanPham> result = LSPRepo.searchByKeyword(keyword);
+        for (LoaiSanPham lsp : result) {
+            model.addRow(new Object[]{
+                lsp.getId(),
+                lsp.getMaLoaiSanPham(),
+                lsp.getTenLoaiSanPham()
+            });
+        }
+    } else if (rdoMauSac.isSelected()) {
+        ArrayList<MauSac> result = MSRepo.searchByKeyword(keyword);
+        for (MauSac ms : result) {
+            model.addRow(new Object[]{
+                ms.getId(),
+                ms.getMaMauSac(),
+                ms.getTenMau()
+            });
+        }
+    } else if (rdoNSX.isSelected()) {
+        ArrayList<NhaSanXuat> result = NSXRepo.searchByKeyword(keyword);
+        for (NhaSanXuat nsx : result) {
+            model.addRow(new Object[]{
+                nsx.getId(),
+                nsx.getMaNSX(),
+                nsx.getTenNSX()
+            });
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn một loại thuộc tính để tìm kiếm!");
+        return;
+    }
+
+    if (model.getRowCount() == 0) {
+        JOptionPane.showMessageDialog(this, "Không tìm thấy thuộc tính nào phù hợp!");
+    }
+    }//GEN-LAST:event_btnSearchThuocTinhActionPerformed
+
+    private void btnSearchSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchSanPhamActionPerformed
+        String keyword = txtSearchSanPham.getText().trim();
+    if (keyword.isEmpty()) {
+        // Nếu không nhập từ khóa, hiển thị toàn bộ danh sách
+        loadToTableSanPham();
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) tblSanPham.getModel();
+    model.setRowCount(0); // Xóa dữ liệu cũ trên bảng
+
+    ArrayList<SanPhamChiTiet> result = SPCTRepo.searchByKeyword(keyword);
+    for (SanPhamChiTiet spct : result) {
+        model.addRow(new Object[]{
+            spct.getId(),
+            spct.getMaSanPhamChiTiet(),
+            spct.getTenSanPhamChiTiet(),
+            LSPRepo.getTenLoaiSanPham(spct.getIdLoaiSanPham()),
+            spct.getAnhSanPham(),
+            spct.getGiaSanPham(),
+            spct.getSoLuong(),
+            MSRepo.getTenMauSac(spct.getIdMauSac()),
+            CLRepo.getTenChatLieu(spct.getIdChatLieu()),
+            KCRepo.getSizeKichCo(spct.getIdKichCo()),
+            NSXRepo.getTenNSX(spct.getIdNSX()),
+            spct.getMoTa()
+        });
+    }
+
+    if (model.getRowCount() == 0) {
+        JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm chi tiết nào phù hợp!");
+    }
+    }//GEN-LAST:event_btnSearchSanPhamActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog SanPhamDialog;
@@ -1787,6 +1917,8 @@ public class SanPhamView extends javax.swing.JPanel {
     private javax.swing.JButton btnHienThiSanPhamAn;
     private javax.swing.JButton btnHienThiThuocTinhAn;
     private javax.swing.JButton btnLamMoiSanPham;
+    private javax.swing.JButton btnSearchSanPham;
+    private javax.swing.JButton btnSearchThuocTinh;
     private javax.swing.JButton btnSuaSanPham;
     private javax.swing.JButton btnSuaThuocTinh;
     private javax.swing.JButton btnThemSanPham;
@@ -1797,7 +1929,6 @@ public class SanPhamView extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cboLoaiSanPham;
     private javax.swing.JComboBox<String> cboMauSac;
     private javax.swing.JComboBox<String> cboNSX;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1822,7 +1953,6 @@ public class SanPhamView extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JLabel lblAnhSanPham;
     private javax.swing.JRadioButton rdoChatLieu;
     private javax.swing.JRadioButton rdoKichCo;
@@ -1837,6 +1967,8 @@ public class SanPhamView extends javax.swing.JPanel {
     private javax.swing.JTextField txtMaSanPham;
     private javax.swing.JTextField txtMaThuocTinh;
     private javax.swing.JTextArea txtMoTa;
+    private javax.swing.JTextField txtSearchSanPham;
+    private javax.swing.JTextField txtSearchThuocTinh;
     private javax.swing.JTextField txtSoLuong;
     private javax.swing.JTextField txtTenSanPham;
     private javax.swing.JTextField txtTenThuocTinh;

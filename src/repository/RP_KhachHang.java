@@ -171,5 +171,32 @@ public class RP_KhachHang {
             return false;
         }
     }
+    
+    public List<KhachHang> timKiemKhachHang(String tuKhoa) {
+    List<KhachHang> listKH = new ArrayList<>();
+    String sql = "SELECT * FROM dbo.KHACHHANG WHERE TrangThai = 0 AND (HoTen LIKE ? OR MaKhachHang LIKE ? OR CAST(ID AS NVARCHAR) LIKE ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        String keyword = "%" + tuKhoa + "%";
+        ps.setString(1, keyword); // Tìm theo Họ Tên
+        ps.setString(2, keyword); // Tìm theo Mã Khách Hàng
+        ps.setString(3, keyword); // Tìm theo ID (chuyển ID thành chuỗi)
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            KhachHang kh = new KhachHang(
+                    rs.getInt(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getDate(5),
+                    rs.getDate(6),
+                    rs.getInt(7)
+            );
+            listKH.add(kh);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return listKH;
+}
 
 }

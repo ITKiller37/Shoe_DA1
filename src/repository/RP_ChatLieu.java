@@ -215,4 +215,38 @@ public boolean show(int id) {
         throw new RuntimeException("Lỗi khi hiển thị lại chất liệu: " + e.getMessage(), e);
     }
 }
+
+    public ArrayList<ChatLieu> searchByKeyword(String keyword) {
+        ArrayList<ChatLieu> list = new ArrayList<>();
+        String sql = "SELECT * FROM ChatLieu WHERE TrangThai = 0 AND (ID = ? OR MaChatLieu LIKE ? OR TenChatLieu LIKE ?)";
+        try (
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Thử chuyển keyword thành số để tìm theo ID
+            int id;
+            try {
+                id = Integer.parseInt(keyword);
+            } catch (NumberFormatException e) {
+                id = -1; // Nếu không phải số, đặt ID là -1 để không tìm theo ID
+            }
+            ps.setInt(1, id);
+            ps.setString(2, "%" + keyword + "%"); // Tìm theo MaChatLieu
+            ps.setString(3, "%" + keyword + "%"); // Tìm theo TenChatLieu
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ChatLieu cl = new ChatLieu(
+                    rs.getInt("Id"),
+                    rs.getString("MaChatLieu"),
+                    rs.getString("TenChatLieu"),
+                    rs.getDate("NgayTao"),
+                    rs.getDate("NgaySua"),
+                    rs.getInt("TrangThai")
+                );
+                list.add(cl);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm kiếm chất liệu: " + e.getMessage(), e);
+        }
+        return list;
+    }
 }

@@ -8,6 +8,7 @@ import view.HoaDon;
 import view.KhachHangView;
 import view.NhanVienView;
 import view.SanPhamView;
+import view.ThongKeView;
 import view.TrangChu;
 import view.VoucherView;
 
@@ -38,7 +39,7 @@ public class Main extends javax.swing.JFrame {
             } else if (index == 4) {
                 setForm(new KhachHangView());
             } else if (index == 5) {
-                
+                    setForm(new ThongKeView());
             }else if (index == 6) {
                 setForm(new VoucherView());
             }else{

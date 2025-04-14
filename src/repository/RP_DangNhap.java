@@ -17,8 +17,8 @@ public class RP_DangNhap {
         this.conn = Dbconnection.getConnection();
     }
     
-   public NhanVienLoginInfo getLoginInfo(String soDienThoai, String matKhau) {
-        String SQL = "SELECT ID, VaiTro FROM NhanVien WHERE SoDienThoai = ? AND MatKhau = ?";
+  public NhanVienLoginInfo getLoginInfo(String soDienThoai, String matKhau) {
+        String SQL = "SELECT ID, VaiTro, TrangThai FROM NhanVien WHERE SoDienThoai = ? AND MatKhau = ? AND TrangThai = 0";
         
         try {
             PreparedStatement ps = this.conn.prepareStatement(SQL);
@@ -34,6 +34,24 @@ public class RP_DangNhap {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    // Phương thức kiểm tra xem nhân viên có nghỉ việc không
+    public boolean isNhanVienNghiViec(String soDienThoai) {
+        String SQL = "SELECT TrangThai FROM NhanVien WHERE SoDienThoai = ?";
+        try {
+            PreparedStatement ps = this.conn.prepareStatement(SQL);
+            ps.setString(1, soDienThoai);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int trangThai = rs.getInt("TrangThai");
+                return trangThai == 1; // Trả về true nếu nhân viên đã nghỉ việc
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

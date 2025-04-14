@@ -64,19 +64,6 @@ public class RP_Voucher {
         }
     }
 
-    // Xóa một voucher
-    public int delete(int id) {
-        sql = "DELETE FROM Voucher WHERE id = ?";
-        try {
-            con = Dbconnection.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            return ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
 
     // Cập nhật một voucher
     public int update(Voucher voucher, int id) {
@@ -99,33 +86,39 @@ public class RP_Voucher {
         }
     }
     
-     public ArrayList<Voucher> searchByMaVoucher(String maVoucher) {
-        ArrayList<Voucher> listVouchers = new ArrayList<>();
-        sql = "SELECT id, maVoucher, tenVoucher, ngayBatDau, ngayKetThuc, loaiVoucher, giaTri, trangThai FROM Voucher WHERE maVoucher LIKE ?";
-        try {
-            con = Dbconnection.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, "%" + maVoucher + "%"); // Tìm kiếm theo mã voucher với ký tự wildcard "%"
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String voucherCode = rs.getString("maVoucher");
-                String voucherName = rs.getString("tenVoucher");
-                String startDate = rs.getString("ngayBatDau");
-                String endDate = rs.getString("ngayKetThuc");
-                String voucherType = rs.getString("loaiVoucher");
-                Double value = rs.getDouble("giaTri");
-                int status = rs.getInt("trangThai");
+     public ArrayList<Voucher> searchByKeyword(String keyword) {
+    ArrayList<Voucher> listVouchers = new ArrayList<>();
+    sql = "SELECT ID, MaVoucher, TenVoucher, NgayBatDau, NgayKetThuc, LoaiVoucher, GiaTri, TrangThai FROM Voucher WHERE ID LIKE ? OR MaVoucher LIKE ? OR TenVoucher LIKE ?";
+    try {
+        con = Dbconnection.getConnection();
+        ps = con.prepareStatement(sql);
+        String searchKeyword = "%" + keyword + "%";
+        // Tìm theo ID (chuyển ID thành chuỗi để so sánh)
+        ps.setString(1, keyword);
+        // Tìm theo MaVoucher
+        ps.setString(2, searchKeyword);
+        // Tìm theo TenVoucher
+        ps.setString(3, searchKeyword);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String voucherCode = rs.getString("MaVoucher");
+            String voucherName = rs.getString("TenVoucher");
+            String startDate = rs.getString("NgayBatDau");
+            String endDate = rs.getString("NgayKetThuc");
+            String voucherType = rs.getString("LoaiVoucher");
+            Double value = rs.getDouble("GiaTri");
+            int status = rs.getInt("TrangThai");
 
-                Voucher voucher = new Voucher(id, voucherCode, voucherName, startDate, endDate, voucherType, value, status);
-                listVouchers.add(voucher);
-            }
-            return listVouchers;
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Voucher voucher = new Voucher(id, voucherCode, voucherName, startDate, endDate, voucherType, value, status);
+            listVouchers.add(voucher);
         }
-        return null;
-    }  
+        return listVouchers;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
      
          public boolean checkMaExists(String maVoucher) {
         String SQL = "SELECT COUNT(*) FROM Voucher WHERE MaVoucher = ?";

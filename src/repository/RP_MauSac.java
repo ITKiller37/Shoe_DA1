@@ -223,4 +223,36 @@ public boolean show(int id) {
         throw new RuntimeException("Lỗi khi hiển thị lại màu sắc: " + e.getMessage(), e);
     }
 }
+
+    public ArrayList<MauSac> searchByKeyword(String keyword) {
+    ArrayList<MauSac> list = new ArrayList<>();
+    String sql = "SELECT * FROM MauSac WHERE TrangThai = 0 AND (ID = ? OR MaMauSac LIKE ? OR TenMau LIKE ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        int id;
+        try {
+            id = Integer.parseInt(keyword);
+        } catch (NumberFormatException e) {
+            id = -1;
+        }
+        ps.setInt(1, id);
+        ps.setString(2, "%" + keyword + "%");
+        ps.setString(3, "%" + keyword + "%");
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            MauSac ms = new MauSac(
+                rs.getInt("Id"),
+                rs.getString("MaMauSac"),
+                rs.getString("TenMau"),
+                rs.getDate("NgayTao"),
+                rs.getDate("NgaySua"),
+                rs.getInt("TrangThai")
+            );
+            list.add(ms);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Lỗi khi tìm kiếm màu sắc: " + e.getMessage(), e);
+    }
+    return list;
+    }
 }

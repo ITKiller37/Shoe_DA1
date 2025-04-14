@@ -3,26 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/HoaDonModel.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/KhachHangPanelModel.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/SanPhamChiTiet1.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/KhachHangPanel.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/BanHang.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/NhanVienModel.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/Model_SanPhamChiTiet.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/VoucherPanelRepo.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_KichCo.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/SanPhamView.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_ChatLieu.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/ThongKeView.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_KhachHang.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_MauSac.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/TrangChu.java</file>
             <file>file:/D:/Dang%20Java/Project%20DA1/src/view/HoaDon.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/VoucherView.java</file>
             <file>file:/D:/Dang%20Java/Project%20DA1/src/com/raven/main/Main.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/SanPhamChiTietRepo.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/Panel_Voucher.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/VoucherPanelModel.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/com/raven/main/ViewLogin.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/ThongKeRepo.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_LoaiSanPham.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/view/KhachHangView.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_SanPhamChiTiet.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_NhanVien.java</file>
             <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/HoaDonRepo.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/VoucherRepo.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/VoucherModel.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/KhachHangPanelRepo.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_NhaSanXuat.java</file>
             <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/HoaDonChiTietRepo.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/HoaDonChiTietModel.java</file>
-            <file>file:/D:/Dang%20Java/Project%20DA1/src/model/KhachHangModel.java</file>
+            <file>file:/D:/Dang%20Java/Project%20DA1/src/repository/RP_Voucher.java</file>
         </group>
     </open-files>
 </project-private>

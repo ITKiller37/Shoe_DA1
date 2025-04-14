@@ -121,28 +121,28 @@ public class VoucherView extends javax.swing.JPanel {
 }
 
   void searchVoucher() {
-    // Lấy mã voucher phần người dùng nhập vào
-    String maVoucherPart = txt_timkem.getText().trim();
-    
-    // Kiểm tra xem mã voucher có rỗng không
-    if (!maVoucherPart.isEmpty()) {
-        // Gọi phương thức tìm kiếm theo phần chuỗi từ lớp RP_Voucher
-        RP_Voucher rpVoucher = new RP_Voucher();
-        ArrayList<Voucher> result = rpVoucher.searchByMaVoucher(maVoucherPart);  // Tìm kiếm theo mã voucher
-        
-        // Kiểm tra nếu có kết quả tìm thấy
-        if (result != null && !result.isEmpty()) {
-            filltable(result);  // Hiển thị các kết quả tìm được lên bảng
-            showData(0);  // Hiển thị chi tiết voucher đầu tiên trong kết quả tìm kiếm
+    String keyword = txt_timkem.getText().trim();
+    if (keyword.isEmpty()) {
+        // Nếu không nhập từ khóa, hiển thị toàn bộ danh sách voucher
+        filltable(r_vc.getAll());
+        if (!r_vc.getAll().isEmpty()) {
+            showData(0);
         } else {
-            // Nếu không tìm thấy voucher, thông báo lỗi
-            JOptionPane.showMessageDialog(this, "Không tìm thấy voucher với phần mã: " + maVoucherPart, 
-                                          "Thông báo", JOptionPane.WARNING_MESSAGE);
+            showData(-1); // Xóa dữ liệu hiển thị nếu không có voucher nào
         }
+        return;
+    }
+
+    // Tìm kiếm theo từ khóa
+    ArrayList<Voucher> result = r_vc.searchByKeyword(keyword);
+    if (result != null && !result.isEmpty()) {
+        filltable(result);
+        showData(0);
     } else {
-        // Nếu không nhập mã voucher, thông báo lỗi
-        JOptionPane.showMessageDialog(this, "Vui lòng nhập phần mã Voucher để tìm kiếm.", 
+        JOptionPane.showMessageDialog(this, "Không tìm thấy voucher với từ khóa: " + keyword, 
                                       "Thông báo", JOptionPane.WARNING_MESSAGE);
+        filltable(new ArrayList<>()); // Xóa bảng nếu không tìm thấy
+        showData(-1); // Xóa dữ liệu hiển thị
     }
 }
   
@@ -171,7 +171,6 @@ public class VoucherView extends javax.swing.JPanel {
         ComboBox_loaivoucher = new javax.swing.JComboBox<>();
         ADD = new javax.swing.JButton();
         UPDATE = new javax.swing.JButton();
-        DELETE = new javax.swing.JButton();
         Seach = new javax.swing.JButton();
         txt_timkem = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -245,16 +244,6 @@ public class VoucherView extends javax.swing.JPanel {
             }
         });
 
-        DELETE.setBackground(new java.awt.Color(255, 204, 204));
-        DELETE.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        DELETE.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/icons8-hide-20.png"))); // NOI18N
-        DELETE.setText("Xóa");
-        DELETE.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DELETEActionPerformed(evt);
-            }
-        });
-
         Seach.setBackground(new java.awt.Color(255, 204, 204));
         Seach.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         Seach.setText("Tìm Kiếm");
@@ -312,8 +301,7 @@ public class VoucherView extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txt_ma, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(UPDATE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txt_ma, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(59, 59, 59)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -330,9 +318,9 @@ public class VoucherView extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(139, 139, 139)
                             .addComponent(ADD, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(194, 194, 194)
-                            .addComponent(DELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(37, 37, 37)
+                            .addGap(64, 64, 64)
+                            .addComponent(UPDATE, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(46, 46, 46)
                             .addComponent(jButton1)
                             .addGap(0, 0, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -350,10 +338,11 @@ public class VoucherView extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txt_ma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_ma, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel3)))
                         .addGap(15, 15, 15)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -374,12 +363,11 @@ public class VoucherView extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ADD)
                     .addComponent(UPDATE)
-                    .addComponent(DELETE)
                     .addComponent(jButton1))
                 .addGap(44, 44, 44)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Seach)
-                    .addComponent(txt_timkem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_timkem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Seach))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(17, Short.MAX_VALUE))
@@ -449,6 +437,12 @@ public class VoucherView extends javax.swing.JPanel {
         double giaTri = Double.parseDouble(giaTriText);
         if (giaTri <= 0) {
             JOptionPane.showMessageDialog(this, "Giá trị voucher phải lớn hơn 0.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Kiểm tra nếu loại voucher là "Phần trăm", giá trị phải <= 100
+        if (loaiVoucher.equalsIgnoreCase("Phần trăm") && giaTri > 100) {
+            JOptionPane.showMessageDialog(this, "Giá trị voucher loại Phần trăm phải nhỏ hơn hoặc bằng 100.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -534,6 +528,12 @@ public class VoucherView extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Giá trị voucher phải lớn hơn 0.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        // Kiểm tra nếu loại voucher là "Phần trăm", giá trị phải <= 100
+        if (loaiVoucher.equalsIgnoreCase("Phần trăm") && giaTri > 100) {
+            JOptionPane.showMessageDialog(this, "Giá trị voucher loại Phần trăm phải nhỏ hơn hoặc bằng 100.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "Giá trị voucher phải là một số hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         return;
@@ -598,16 +598,10 @@ public class VoucherView extends javax.swing.JPanel {
     filltable(r_vc.getAll());
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void DELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DELETEActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_DELETEActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ADD;
     private javax.swing.JComboBox<String> ComboBox_loaivoucher;
-    private javax.swing.JButton DELETE;
     private javax.swing.JButton Seach;
     private javax.swing.JTable Table_Voucher;
     private javax.swing.JButton UPDATE;

@@ -222,4 +222,36 @@ public boolean show(int id) {
         throw new RuntimeException("Lỗi khi hiển thị lại kích cỡ: " + e.getMessage(), e);
     }
 }
+
+    public ArrayList<KichCo> searchByKeyword(String keyword) {
+    ArrayList<KichCo> list = new ArrayList<>();
+    String sql = "SELECT * FROM KichCo WHERE TrangThai = 0 AND (ID = ? OR MaKichCo LIKE ? OR Size LIKE ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        int id;
+        try {
+            id = Integer.parseInt(keyword);
+        } catch (NumberFormatException e) {
+            id = -1;
+        }
+        ps.setInt(1, id);
+        ps.setString(2, "%" + keyword + "%");
+        ps.setString(3, "%" + keyword + "%");
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            KichCo kc = new KichCo(
+                rs.getInt("Id"),
+                rs.getString("MaKichCo"),
+                rs.getBigDecimal("Size"),
+                rs.getDate("NgayTao"),
+                rs.getDate("NgaySua"),
+                rs.getInt("TrangThai")
+            );
+            list.add(kc);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Lỗi khi tìm kiếm kích cỡ: " + e.getMessage(), e);
+    }
+    return list;
+}
 }

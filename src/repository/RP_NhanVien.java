@@ -218,33 +218,47 @@ public boolean anNhanVien(int id) {
 
     public List<NhanVien> timKiemNhanVien(String tuKhoa) {
         List<NhanVien> list = new ArrayList<>();
-        String sql = "SELECT * FROM NhanVien WHERE HoTen LIKE ? OR MaNhanVien LIKE ?";
-        try (Connection con = Dbconnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            String keyword = "%" + tuKhoa + "%";
-            ps.setString(1, keyword);
-            ps.setString(2, keyword);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                NhanVien nv = new NhanVien();
-                nv.setId(rs.getInt("ID"));
-                nv.setMaNhanVien(rs.getString("MaNhanVien"));
-                nv.setHoTen(rs.getString("HoTen"));
-                nv.setGioiTinh(rs.getString("GioiTinh"));
-                nv.setNgaySinh(rs.getDate("NgaySinh"));
-                nv.setDiaChi(rs.getString("DiaChi"));
-                nv.setSoCCCD(rs.getString("SoCCCD"));
-                nv.setSoDienThoai(rs.getString("SoDienThoai"));
-                nv.setMatKhau(rs.getString("MatKhau"));
-                nv.setVaiTro(rs.getString("VaiTro"));
-                nv.setGhiChu(rs.getString("GhiChu"));
-                nv.setTrangThai(rs.getInt("TrangThai"));
-                list.add(nv);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    String sql = "SELECT * FROM NhanVien WHERE TrangThai = 0 AND (HoTen LIKE ? OR MaNhanVien LIKE ? OR CAST(ID AS NVARCHAR) LIKE ?)";
+    try (Connection con = Dbconnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        String keyword = "%" + tuKhoa + "%";
+        ps.setString(1, keyword); // Tìm theo Họ Tên
+        ps.setString(2, keyword); // Tìm theo Mã Nhân Viên
+        ps.setString(3, keyword); // Tìm theo ID (chuyển ID thành chuỗi)
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            // Chuyển đổi java.sql.Date thành java.util.Date
+            java.sql.Date sqlNgaySinh = rs.getDate("NgaySinh");
+            java.util.Date ngaySinh = (sqlNgaySinh != null) ? new java.util.Date(sqlNgaySinh.getTime()) : null;
+
+            java.sql.Timestamp sqlNgayTao = rs.getTimestamp("NgayTao");
+            java.util.Date ngayTao = (sqlNgayTao != null) ? new java.util.Date(sqlNgayTao.getTime()) : null;
+
+            java.sql.Timestamp sqlNgaySua = rs.getTimestamp("NgaySua");
+            java.util.Date ngaySua = (sqlNgaySua != null) ? new java.util.Date(sqlNgaySua.getTime()) : null;
+
+            NhanVien nv = new NhanVien(
+                    rs.getInt("ID"),
+                    rs.getString("MaNhanVien"),
+                    rs.getString("HoTen"),
+                    rs.getString("GioiTinh"),
+                    ngaySinh,
+                    rs.getString("DiaChi"),
+                    rs.getString("SoCCCD"),
+                    rs.getString("SoDienThoai"),
+                    rs.getString("MatKhau"),
+                    rs.getString("VaiTro"),
+                    rs.getString("GhiChu"),
+                    ngayTao,
+                    ngaySua,
+                    rs.getInt("TrangThai")
+            );
+            list.add(nv);
         }
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return list;
+}
     
     // Kiểm tra trùng Số CCCD
 public boolean kiemTraTrungSoCCCD(String soCCCD, int idNhanVien, boolean isInsert) {

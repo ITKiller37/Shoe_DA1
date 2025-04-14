@@ -40,7 +40,7 @@ public class HoaDon extends javax.swing.JPanel {
     private BanHang qLy = new BanHang();
     DefaultTableModel defaultTableModel;
     BanHang repo = new BanHang();
-    private int idNhanVien ;
+    private int idNhanVien;
     //hóa đơn
     private HoaDonRepo qlyhd = new HoaDonRepo();
     private HoaDonChiTietRepo qLyChiTiet = new HoaDonChiTietRepo();
@@ -55,6 +55,13 @@ public class HoaDon extends javax.swing.JPanel {
         fillTableSp();
         this.fillTableHoaDon();
         this.showPopup(tblHoaDon);
+        txtTienDu.setEditable(false);
+        txtTongTien.setEditable(false);
+        txtThanhTien.setEditable(false);
+        txtMaVoucher.setEditable(false);
+        txtGiamGia.setEditable(false);
+        txtTenKhachHang.setEditable(false);
+        txtSoDienThoai.setEditable(false);
     }
 
     /**
@@ -603,6 +610,7 @@ public class HoaDon extends javax.swing.JPanel {
         });
         jScrollPane8.setViewportView(tblHoaDonCho);
 
+        tblsanpham.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblsanpham.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -939,8 +947,8 @@ public class HoaDon extends javax.swing.JPanel {
                             .addComponent(jLabel62, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(23, 23, 23)
                         .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblThoiGianTao, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblSoDienThoai, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblSoDienThoai, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblThoiGianTao, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel20Layout.createSequentialGroup()
                         .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel61, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1050,6 +1058,7 @@ public class HoaDon extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        tblSanPhamHD.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tblSanPhamHD.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -1245,68 +1254,123 @@ public class HoaDon extends javax.swing.JPanel {
 
     private void btnHoanTienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHoanTienActionPerformed
 
-        if (jblMaHoaDon.getText().equals("#####")) {
-            JOptionPane.showMessageDialog(this, "Chọn hóa đơn cần trả lại tiền dư");
-        } else {
+        // Kiểm tra xem hóa đơn đã được chọn chưa
+    if (jblMaHoaDon.getText().equals("#####")) {
+        JOptionPane.showMessageDialog(this, "Chọn hóa đơn cần trả lại tiền dư");
+        return;
+    }
 
-            if (txtTienMat.getText().trim().isEmpty() && txtChuyenKhoan.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Khách hàng chưa thanh toán hóa đơn");
-            } else {
-                if ((txtTienDu.getText().trim().isEmpty() || Long.parseLong(txtTienDu.getText()) == 0)) {
-                    JOptionPane.showMessageDialog(this, "Khách hàng thanh toán đủ");
-                } else if (Long.parseLong(txtTienDu.getText()) < 0) {
-                    JOptionPane.showMessageDialog(this, "Khách hàng thanh toán thiếu");
-                } else {
+    // Kiểm tra xem khách hàng đã thanh toán chưa
+    String tienMatStr = txtTienMat.getText().replace(",", "").trim();
+    String tienCkStr = txtChuyenKhoan.getText().replace(",", "").trim();
 
-                    String thanhTien = txtThanhTien.getText().replace(".", "");
+    if (tienMatStr.isEmpty() && tienCkStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Khách hàng chưa thanh toán hóa đơn");
+        return;
+    }
 
-                    if (!txtTienMat.getText().trim().isEmpty() && !txtChuyenKhoan.getText().trim().isEmpty()) {
+    // Lấy giá trị tiền mặt và chuyển khoản
+    long tienMat = 0;
+    long tienCk = 0;
 
-                        if (Long.parseLong(txtTienMat.getText()) == Long.parseLong(thanhTien)) {
-
-                            txtChuyenKhoan.setText(null);
-                        } else if (Long.parseLong(txtTienMat.getText()) > Long.parseLong(thanhTien)) {
-
-                            txtTienMat.setText(thanhTien);
-                            txtChuyenKhoan.setText(null);
-                        } else if (Long.parseLong(txtChuyenKhoan.getText()) > Long.parseLong(thanhTien)) {
-
-                            txtTienMat.setText(null);
-                            txtChuyenKhoan.setText(thanhTien);
-                        } else if (Long.parseLong(txtChuyenKhoan.getText()) == Long.parseLong(thanhTien)) {
-
-                            txtTienMat.setText(null);
-                        } else if (Long.parseLong(txtChuyenKhoan.getText()) == Long.parseLong(txtTienDu.getText())) {
-
-                            txtChuyenKhoan.setText(null);
-                        } else if (Long.parseLong(txtChuyenKhoan.getText()) > Long.parseLong(txtTienDu.getText())) {
-
-                            long tienTra = Long.parseLong(txtChuyenKhoan.getText()) - Long.parseLong(txtTienDu.getText());
-                            txtChuyenKhoan.setText(String.valueOf(tienTra));
-                        } else if (Long.parseLong(txtTienMat.getText()) == Long.parseLong(txtTienDu.getText())) {
-
-                            txtTienMat.setText(null);
-                        } else if (Long.parseLong(txtTienMat.getText()) > Long.parseLong(txtTienDu.getText())) {
-
-                            long tienTra = Long.parseLong(txtTienMat.getText()) - Long.parseLong(txtTienDu.getText());
-                            txtTienMat.setText(String.valueOf(tienTra));
-                        } else {
-
-                            long tienTra = Long.parseLong(txtTienMat.getText()) + Long.parseLong(txtChuyenKhoan.getText()) - Long.parseLong(txtTienDu.getText());
-                            txtTienMat.setText(String.valueOf(tienTra));
-                        }
-                    } else if (!txtTienMat.getText().trim().isEmpty()) {
-
-                        txtTienMat.setText(thanhTien);
-                    } else if (!txtChuyenKhoan.getText().trim().isEmpty()) {
-
-                        txtChuyenKhoan.setText(thanhTien);
-                    }
-                    txtTienDu.setText("0");
-                    JOptionPane.showMessageDialog(this, "Đã trả lại tiền dư cho khách hàng");
-                }
+    try {
+        if (!tienMatStr.isEmpty()) {
+            tienMat = Long.parseLong(tienMatStr);
+            if (tienMat < 0) {
+                JOptionPane.showMessageDialog(this, "Số tiền mặt không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
+        if (!tienCkStr.isEmpty()) {
+            tienCk = Long.parseLong(tienCkStr);
+            if (tienCk < 0) {
+                JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Số tiền mặt hoặc chuyển khoản không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Lấy giá trị tiền dư và loại bỏ dấu ngăn cách
+    String tienDuStr = txtTienDu.getText().replace(",", "").trim();
+    if (tienDuStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Khách hàng thanh toán đủ");
+        return;
+    }
+
+    long tienDu;
+    try {
+        tienDu = Long.parseLong(tienDuStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Số tiền dư không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra tiền dư
+    if (tienDu == 0) {
+        JOptionPane.showMessageDialog(this, "Khách hàng thanh toán đủ");
+        return;
+    }
+    if (tienDu < 0) {
+        JOptionPane.showMessageDialog(this, "Khách hàng thanh toán thiếu");
+        return;
+    }
+
+    // Lấy giá trị thành tiền và loại bỏ dấu ngăn cách
+    String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "").trim();
+    long thanhTien;
+    try {
+        thanhTien = Long.parseLong(thanhTienStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Tổng tiền không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Định dạng số với dấu ngăn cách hàng nghìn
+    DecimalFormat decimalFormat = new DecimalFormat("#,###");
+
+    // Trường hợp 1: Cả tiền mặt và chuyển khoản đều có giá trị
+    if (!tienMatStr.isEmpty() && !tienCkStr.isEmpty()) {
+        if (tienMat == thanhTien) {
+            txtChuyenKhoan.setText(null);
+        } else if (tienMat > thanhTien) {
+            txtTienMat.setText(decimalFormat.format(thanhTien));
+            txtChuyenKhoan.setText(null);
+        } else if (tienCk > thanhTien) {
+            txtTienMat.setText(null);
+            txtChuyenKhoan.setText(decimalFormat.format(thanhTien));
+        } else if (tienCk == thanhTien) {
+            txtTienMat.setText(null);
+        } else if (tienCk == tienDu) {
+            txtChuyenKhoan.setText(null);
+        } else if (tienCk > tienDu) {
+            long tienTra = tienCk - tienDu;
+            txtChuyenKhoan.setText(decimalFormat.format(tienTra));
+        } else if (tienMat == tienDu) {
+            txtTienMat.setText(null);
+        } else if (tienMat > tienDu) {
+            long tienTra = tienMat - tienDu;
+            txtTienMat.setText(decimalFormat.format(tienTra));
+        } else {
+            long tienTra = tienMat + tienCk - tienDu;
+            txtTienMat.setText(decimalFormat.format(tienTra));
+            txtChuyenKhoan.setText(null);
+        }
+    }
+    // Trường hợp 2: Chỉ có tiền mặt
+    else if (!tienMatStr.isEmpty()) {
+        txtTienMat.setText(decimalFormat.format(thanhTien));
+    }
+    // Trường hợp 3: Chỉ có chuyển khoản
+    else if (!tienCkStr.isEmpty()) {
+        txtChuyenKhoan.setText(decimalFormat.format(thanhTien));
+    }
+
+    // Đặt lại tiền dư về 0
+    txtTienDu.setText("0");
+    JOptionPane.showMessageDialog(this, "Đã trả lại tiền dư cho khách hàng");
     }//GEN-LAST:event_btnHoanTienActionPerformed
 
     private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
@@ -1330,7 +1394,7 @@ public class HoaDon extends javax.swing.JPanel {
         if (confirm == JOptionPane.YES_OPTION) {
             this.createHoaDon();
         }
-
+        
     }//GEN-LAST:event_btnTaoHoaDonActionPerformed
 
     private void tblHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHoaDonMouseClicked
@@ -1505,7 +1569,7 @@ public class HoaDon extends javax.swing.JPanel {
         jTabbedPane5.setTitleAt(0, hd.getMaHoaDon());
         jblMaHoaDon.setText(hd.getMaHoaDon());
         fillTableHoaDon(hd.getId());
-        tongTien(repo.getTongTien(hd.getId()));
+        tongTien(repo.getTongTien1(hd.getId()));
 
         String tenKH = qLy.getAllHoaDonCho().get(indexHdC).getTenKhachHang();
 
@@ -1516,6 +1580,9 @@ public class HoaDon extends javax.swing.JPanel {
             txtTenKhachHang.setText("Khách Vãng Lai");
             txtSoDienThoai.setText(null);
         }
+//        cleanTextKhachHang();
+        cleanTextVoucher();
+        cleanTextThanhToan();
 
 //        VoucherModel voucherModel = voucherRepo.getIdVoucher(qLy.getAllHoaDonCho().get(indexHdC).getIdVoucher());
 //        if (voucherModel.getMaVoucher() != null) {
@@ -1591,26 +1658,75 @@ public class HoaDon extends javax.swing.JPanel {
 
     public void inputThanhToan(JTextField txtTtLoai1, JTextField txtTtLoai2) {
 
-         try {
-        String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "");
-        long thanhTien = Long.parseLong(thanhTienStr);
+       // Lấy giá trị thành tiền và loại bỏ dấu ngăn cách
+    String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "").trim();
+    
+    // Kiểm tra chuỗi rỗng
+    if (thanhTienStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Số tiền thanh toán không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        long loai1 = txtTtLoai1.getText().isEmpty() ? 0 : Long.parseLong(txtTtLoai1.getText().replace(",", ""));
-        long loai2 = txtTtLoai2.getText().isEmpty() ? 0 : Long.parseLong(txtTtLoai2.getText().replace(",", ""));
-
-        if (txtTtLoai2.getText().length() > 13) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập dưới 999 tỷ");
+    long thanhTien;
+    try {
+        thanhTien = Long.parseLong(thanhTienStr);
+        if (thanhTien < 0) {
+            JOptionPane.showMessageDialog(this, "Tổng tiền không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        long tienDu = loai1 + loai2 - thanhTien;
-
-        // Hiển thị tiền dư có định dạng
-        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-        txtTienDu.setText(formatter.format(tienDu));
-
     } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số!");
+        JOptionPane.showMessageDialog(this, "Số tiền thanh toán không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Kiểm tra độ dài của txtTtLoai2
+    if (txtTtLoai2.getText().length() > 13) {
+        JOptionPane.showMessageDialog(this, "Vui lòng nhập dưới 999 tỷ");
+        return;
+    }
+
+    // Lấy giá trị từ txtTtLoai1 và txtTtLoai2, loại bỏ dấu ngăn cách
+    String txtLoai1 = txtTtLoai1.getText().replace(",", "").trim();
+    String txtLoai2 = txtTtLoai2.getText().replace(",", "").trim();
+
+    long tienLoai1 = 0;
+    long tienLoai2 = 0;
+
+    try {
+        // Kiểm tra và lấy giá trị từ txtTtLoai1
+        if (!txtLoai1.isEmpty()) {
+            tienLoai1 = Long.parseLong(txtLoai1);
+            if (tienLoai1 < 0) {
+                JOptionPane.showMessageDialog(this, "Số tiền mặt không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txtTtLoai1.setText("");
+                return;
+            }
+        }
+
+        // Kiểm tra và lấy giá trị từ txtTtLoai2
+        if (!txtLoai2.isEmpty()) {
+            tienLoai2 = Long.parseLong(txtLoai2);
+            if (tienLoai2 < 0) {
+                JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                txtTtLoai2.setText("");
+                return;
+            }
+        }
+
+        long tienDu = 0;
+        if (txtLoai2.isEmpty()) {
+            tienDu = 0; // Nếu txtTtLoai2 rỗng, tiền dư là 0
+        } else if (txtLoai1.isEmpty()) {
+            tienDu = tienLoai2 - thanhTien;
+        } else {
+            tienDu = tienLoai1 + tienLoai2 - thanhTien;
+        }
+
+        // Định dạng tiền dư với dấu ngăn cách hàng nghìn
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        txtTienDu.setText(decimalFormat.format(tienDu));
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Số tiền nhập vào không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
     }
 
@@ -1635,62 +1751,90 @@ public class HoaDon extends javax.swing.JPanel {
 
     public void thanhToan() {
 
-         if (jblMaHoaDon.getText().equals("#####")) {
+     if (jblMaHoaDon.getText().equals("#####")) {
         JOptionPane.showMessageDialog(this, "Chọn hóa đơn cần thanh toán");
         return;
     }
 
-    if (!checkTable()) return;
-
-    long tienDu, tienMat, tienCk;
-
-    try {
-        tienDu = Long.parseLong(txtTienDu.getText().replace(",", ""));
-    } catch (NumberFormatException e) {
-        tienDu = -1;
+    if (!checkTable()) {
+        return;
     }
 
+    // Xử lý txtTienMat, loại bỏ dấu ngăn cách
+    String tienMatStr = txtTienMat.getText().replace(",", "").trim();
+    long tienMat;
     try {
-        tienMat = Long.parseLong(txtTienMat.getText().replace(",", ""));
+        tienMat = tienMatStr.isEmpty() ? 0 : Long.parseLong(tienMatStr);
+        if (tienMat < 0) {
+            JOptionPane.showMessageDialog(this, "Số tiền mặt không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     } catch (NumberFormatException e) {
-        tienMat = -1;
+        JOptionPane.showMessageDialog(this, "Số tiền mặt không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
+    // Xử lý txtChuyenKhoan, loại bỏ dấu ngăn cách
+    String tienCkStr = txtChuyenKhoan.getText().replace(",", "").trim();
+    long tienCk;
     try {
-        tienCk = Long.parseLong(txtChuyenKhoan.getText().replace(",", ""));
+        tienCk = tienCkStr.isEmpty() ? 0 : Long.parseLong(tienCkStr);
+        if (tienCk < 0) {
+            JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không được âm.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     } catch (NumberFormatException e) {
-        tienCk = -1;
+        JOptionPane.showMessageDialog(this, "Số tiền chuyển khoản không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Xử lý txtTienDu, loại bỏ dấu ngăn cách
+    String tienDuStr = txtTienDu.getText().replace(",", "").trim();
+    long tienDu;
+    try {
+        tienDu = Long.parseLong(tienDuStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Số tiền dư không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
     if (tienMat <= 0 && tienCk <= 0) {
         JOptionPane.showMessageDialog(this, "Khách hàng chưa thanh toán hóa đơn");
-    } else if (tienDu < 0) {
+        return;
+    }
+
+    if (tienDu < 0) {
         JOptionPane.showMessageDialog(this, "Khách hàng thanh toán còn thiếu");
-    } else if (tienDu > 1_000_000) {
+        return;
+    }
+
+    if (tienDu > 1_000_000) {
         JOptionPane.showMessageDialog(this, "Trả lại tiền thừa cho khách hàng");
-    } else {
-        try {
-            String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "");
-            long tongTien = Long.parseLong(thanhTienStr);
-            String loai = cbbThanhToan.getSelectedItem().toString();
+        return;
+    }
 
-            if (cbbThanhToan.getSelectedIndex() == 2) {
-                if (tienMat <= 0 || txtTienMat.getText().trim().isEmpty()) {
-                    loai = "Chuyển Khoản";
-                } else if (tienCk <= 0 || txtChuyenKhoan.getText().trim().isEmpty()) {
-                    loai = "Tiền Mặt";
-                }
-            }
+    String thanhTienStr = txtThanhTien.getText().replace(".", "").replace(",", "").trim();
+    long tongTien;
+    try {
+        tongTien = Long.parseLong(thanhTienStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Tổng tiền không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            this.qLy.updateThanhToanHoaDon(loai, tongTien,
-                    qLy.getHoaDon(tblHoaDonCho.getSelectedRow()).getId());
-            JOptionPane.showMessageDialog(this, "Thanh toán thành công");
-            this.loadForm();
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Lỗi dữ liệu: Không thể chuyển đổi thành số");
+    String loai = cbbThanhToan.getSelectedItem().toString();
+    if (cbbThanhToan.getSelectedIndex() == 2) {
+        if (tienMat <= 0 || txtTienMat.getText().trim().isEmpty()) {
+            loai = "Chuyển Khoản";
+        }
+        if (tienCk <= 0 || txtChuyenKhoan.getText().trim().isEmpty()) {
+            loai = "Tiền Mặt";
         }
     }
+
+    this.qLy.updateThanhToanHoaDon(loai, tongTien, qLy.getHoaDon(tblHoaDonCho.getSelectedRow()).getId(), txtGiamGia.getText());
+    JOptionPane.showMessageDialog(this, "Thanh toán thành công");
+    this.loadForm();
     }
     
     public void loadForm () {
@@ -1704,6 +1848,7 @@ public class HoaDon extends javax.swing.JPanel {
         jblMaHoaDon.setText("#####");
         txtMaVoucher.setText(null);
         txtGiamGia.setText(null);
+        jTabbedPane5.setTitleAt(0, "#####");
         fillTableHoaDonCho();
         fillTableHoaDon();
         DefaultTableModel tblModel = (DefaultTableModel) tblHoaDon.getModel();
@@ -1754,7 +1899,7 @@ public class HoaDon extends javax.swing.JPanel {
             fillTableSp();
             HoaDonModel hd = qLy.getHoaDon(tblHoaDonCho.getSelectedRow());
             fillTableHoaDon(hd.getId());
-            tongTien(repo.getTongTien(hd.getId()));
+            tongTien(repo.getTongTien1(hd.getId()));
         }
     }
 
@@ -1794,7 +1939,10 @@ public class HoaDon extends javax.swing.JPanel {
         txtTenKhachHang.setText(null);
         txtSoDienThoai.setText(null);
     }
-
+    public void cleanTextThanhToan(){
+        txtTienDu.setText(null);
+        txtTienMat.setText(null);
+    }
     public void fillTableSp() {
         defaultTableModel = (DefaultTableModel) tblsanpham.getModel();
         defaultTableModel.setRowCount(0);
@@ -1872,8 +2020,8 @@ public class HoaDon extends javax.swing.JPanel {
         txtTenKhachHang.setText("Khách Vãng Lai");
         cleanTextVoucher();
         tblHoaDonCho.setRowSelectionInterval(tblHoaDonCho.getRowCount() - 1, tblHoaDonCho.getRowCount() - 1);
-
         JOptionPane.showMessageDialog(this, "Tạo hóa đơn thành công");
+        fillTableHoaDon();
     }
 
     //HÓA ĐƠN
@@ -1917,32 +2065,22 @@ public class HoaDon extends javax.swing.JPanel {
 
 private void fillDataHoaDon(HoaDonModel hdct) {
     lblMaHoaDon.setText(hdct.getMaHoaDon());
-    
-    // Kiểm tra và hiển thị tên khách hàng hoặc "Khách vãng lai"
     lblTenKhachHang.setText(hdct.getTenKhachHang() == null || hdct.getTenKhachHang().trim().isEmpty() ? "Khách vãng lai" : hdct.getTenKhachHang());
-    
-    // Hiển thị số điện thoại
     lblSoDienThoai.setText(hdct.getSoDienThoai());
-    
-    // Hiển thị thời gian tạo hóa đơn
     lblThoiGianTao.setText(hdct.getThoiGianTao());
-    
-    // Hiển thị loại thanh toán
     lblLoaiThanhToan.setText(hdct.getLoaiThanhToan());
-    
-    // Hiển thị trạng thái thanh toán
     lblTrangThai.setText(String.valueOf(hdct.getTrangThai() == 0 ? "Đã Thanh Toán" : "Chưa Thanh Toán"));
+        lbltenVoucher.setText(hdct.getLoaiVoucher());
     
-    // Hiển thị tên voucher (nếu có)
-    lbltenVoucher.setText(hdct.getTenVoucher());
-    
-    // Định dạng số tiền và hiển thị (có dấu phân cách hàng nghìn)
     NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-    String formattedTongTien = currencyFormat.format(hdct.getTongTien());
+    String formattedTongTien = currencyFormat.format(repo.getTongTien0(hdct.getId()));
+    String formattedThanhTien = currencyFormat.format(hdct.getTongTien());
+//NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+//    String formattedTongTien = currencyFormat.format(hdct.getTongTien());
+//    lblTongTienHD.setText(repo.getTongTien(hdct.getId()) + " đ");
+//    lblThanhTienHD.setText(formattedTongTien);
     lblTongTienHD.setText(formattedTongTien);
-    
-    // Định dạng số tiền cho thanh toán
-    lblThanhTienHD.setText(formattedTongTien);
+    lblThanhTienHD.setText(formattedThanhTien);
 }
 
 
@@ -1974,9 +2112,7 @@ private void fillDataHoaDon(HoaDonModel hdct) {
         }
     }
     
-//    public void removeTitleBar() {
-//        ((BasicInternalFrameUI) this.getUI()).setNorthPane(null);
-//    }
+
 
     public int getIdHD(int index) {
         return qlyhd.getIdHD().get(index).getId();
@@ -1985,9 +2121,6 @@ private void fillDataHoaDon(HoaDonModel hdct) {
     public int getIdHDCT(int index) {
         return qLyChiTiet.getIdHDCT().get(index).getId();
     }
-//    public void setMouse() {
-//        txtLocNgayBD.requestFocus();
-//    }
 
 
 private void chonSanPham() {
@@ -2030,7 +2163,7 @@ private void chonSanPham() {
                 }
 
                 repo.updateSoLuongSpct(soLuong, spct.getId());
-                tongTien(repo.getTongTien(hd.getId()));
+                tongTien(repo.getTongTien1(hd.getId()));
                 fillTableHoaDon(hd.getId());
                 fillTableSp();
             } else {
@@ -2223,7 +2356,7 @@ public void createFromKhachHang() {
                             JOptionPane.showMessageDialog(this, "Số lượng sản phẩm không đủ");
                         }
 
-                        tongTien(repo.getTongTien(hd.getId()));
+                        tongTien(repo.getTongTien1(hd.getId()));
                         fillTableHoaDon(hd.getId());
                         fillTableSp();
                     } else {
@@ -2242,12 +2375,18 @@ public void createFromKhachHang() {
         } else if (txtTongTien.getText().length() < 2) {
             JOptionPane.showMessageDialog(this,"Hóa đơn trống");
         } else {
-            if (!txtMaVoucher.getText().isEmpty()) {
-                this.inputThanhTien(false);
-            }
+            
             qLy.xuatHoaDon(ma, txtTenKhachHang.getText(), txtSoDienThoai.getText(), txtTongTien.getText(),
                     txtMaVoucher.getText(), txtGiamGia.getText(), txtThanhTien.getText(), in);
-
         }
+    }
+    public String tongTien() {
+        long tongTien = 0;
+        for (int i = 0; i < tblSanPhamHD.getRowCount(); i++) {
+
+            tongTien += Long.parseLong(tblSanPhamHD.getValueAt(i, 2).toString()) * Long.parseLong(tblSanPhamHD.getValueAt(i, 3).toString());
+        }
+
+        return String.valueOf(tongTien) + " VNĐ";
     }
 }

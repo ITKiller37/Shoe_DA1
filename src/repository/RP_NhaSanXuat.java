@@ -224,4 +224,36 @@ public boolean show(int id) {
         throw new RuntimeException("Lỗi khi hiển thị lại nhà sản xuất: " + e.getMessage(), e);
     }
 }
+
+    public ArrayList<NhaSanXuat> searchByKeyword(String keyword) {
+    ArrayList<NhaSanXuat> list = new ArrayList<>();
+    String sql = "SELECT * FROM NhaSanXuat WHERE TrangThai = 0 AND (ID = ? OR MaNSX LIKE ? OR TenNSX LIKE ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        int id;
+        try {
+            id = Integer.parseInt(keyword);
+        } catch (NumberFormatException e) {
+            id = -1;
+        }
+        ps.setInt(1, id);
+        ps.setString(2, "%" + keyword + "%");
+        ps.setString(3, "%" + keyword + "%");
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            NhaSanXuat nsx = new NhaSanXuat(
+                rs.getInt("Id"),
+                rs.getString("MaNSX"),
+                rs.getString("TenNSX"),
+                rs.getDate("NgayTao"),
+                rs.getDate("NgaySua"),
+                rs.getInt("TrangThai")
+            );
+            list.add(nsx);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Lỗi khi tìm kiếm nhà sản xuất: " + e.getMessage(), e);
+    }
+    return list;
+}
 }
